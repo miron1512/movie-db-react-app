@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SearchBarContainer from './SearchBarContainer';
-import { loginUser, initAuth } from '../actions/user';
+import NavbarContainer from './NavbarContainer';
+import { initAuth } from '../actions/user';
 
 class App extends Component {
-
   componentWillMount() {
     console.log('App this.props', this.props);
-    // this.props.loginUser('user1', 'user1');
-    //this.props.initAuth();
+    this.props.initAuth();
   }
-
-  componentWillReceiveProps(nextProps) {
-
-  }
-
-
 
   render() {
     return (
       <div>
+        <NavbarContainer />
         <SearchBarContainer />
         {this.props.children}
       </div>
@@ -27,10 +21,4 @@ class App extends Component {
   }
 }
 
-// function mapStateToProps(state) {
-//     return {
-//         user: state.user
-//     }
-// }
-
-export default connect(null, { initAuth, loginUser })(App);
+export default connect(null, { initAuth })(App);
