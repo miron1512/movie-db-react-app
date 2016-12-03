@@ -15,6 +15,14 @@ apiRoutes.post('/signup', function (req, res) {
         return res.json({ success: false, message: 'Please pass username and password.' });
     }
 
+    var userFieldRegexp = /^[a-zA-Z0-9_]{3,25}$/;
+    if (!userFieldRegexp.test(req.body.username) || !userFieldRegexp.test(req.body.password)) {
+        return res.json({
+            success: false,
+            message: 'Username and password may only contain "a-z", "A-Z" or "_" and length must be from 3 to 25 characters.'
+        });
+    }
+
     var newUser = new User({
         username: req.body.username,
         password: req.body.password
@@ -22,7 +30,7 @@ apiRoutes.post('/signup', function (req, res) {
 
     newUser.save(function (err) {
         if (err) {
-            return res.json({ success: false, message: 'Username already exists.' });
+            return res.json({ success: false, message: 'Username is already taken.' });
         }
 
         console.log('User saved successfully');
@@ -48,7 +56,7 @@ apiRoutes.post('/authenticate', (req, res) => {
             });
         }
 
-        var token = jwt.sign(user, secretString, {
+        var token = jwt.sign({ username: user.username }, secretString, {
             expiresIn: '24h'
         });
 
@@ -88,11 +96,11 @@ apiRoutes.use((req, res, next) => {
     }
 });
 
-apiRoutes.post('/me', (req, res) => {
+apiRoutes.get('/me', (req, res) => {
     var username = req.decoded._doc.username;
     return res.send({
         success: true,
-        user: username
+        username: username
     });
 })
 
