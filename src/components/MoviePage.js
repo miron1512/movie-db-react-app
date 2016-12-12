@@ -12,6 +12,18 @@ import {
     IMAGE_SIZES
 } from '../constants/movieConstants';
 
+const FavoriteButton = ({user, isFavorite, onButtonClick}) => {
+    if (!user) {
+        return (
+            <Button bsStyle="primary" className="col-xs-12" disabled>Add to favorite</Button>
+        );
+    }
+
+    return isFavorite
+        ? <Button bsStyle="default" className="col-xs-12" onClick={() => onButtonClick(false)}>Delete from favorite</Button>
+        : <Button bsStyle="primary" className="col-xs-12" onClick={() => onButtonClick(true)}>Add to favorite</Button>
+}
+
 class MoviePage extends Component {
     renderImages(images, className) {
         if (!images) return null
@@ -24,7 +36,7 @@ class MoviePage extends Component {
 
     render() {
         console.log('MoviePage', this.props.movie);
-        let {basicInfo, images} = this.props;
+        let {basicInfo, images, userStates} = this.props;
         return (
             <div className="container">
                 <Media>
@@ -34,7 +46,11 @@ class MoviePage extends Component {
                                 ? < img className="media-object img-responsive" src={`${BASE_IMAGE_URL}${IMAGE_SIZES.XMEDIUM}${basicInfo.poster_path}`} alt="PosterImage" />
                                 : null
                         }
-                        <Button bsStyle="primary" className="col-xs-12">Add to favorite</Button>
+                        <FavoriteButton
+                            user={this.props.isAuth}
+                            isFavorite={userStates.favorite}
+                            onButtonClick={(isFavorite) => this.props.onFavoriteButtonClick(isFavorite)}
+                            />
                     </Media.Left>
                     <Media.Body>
                         <Media.Heading>{basicInfo.original_title}</Media.Heading>

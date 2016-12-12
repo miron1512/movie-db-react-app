@@ -142,3 +142,63 @@ export function fetchMovieAltTitles(id) {
             });
     };
 };
+
+const fetchMovieUserFavoriteSuccess = (response) => {
+    return {
+        type: types.FETCH_MOVIE_USER_FAVORITE,
+        payload: response
+    };
+};
+
+const fetchMovieUserRatingSuccess = (response) => {
+    return {
+        type: types.FETCH_MOVIE_USER_RATING,
+        payload: response
+    };
+};
+
+export function fetchMovieUserStates(id) {
+    return dispatch => {
+        const token = localStorage.getItem(LOCALSTORAGE_PATH);
+        if (!token) {
+            return;
+        }
+
+        axios.get(`/api/movie/${id}/account_states?token=${token}`)
+            .then(response => {
+                if (response.data.success) {
+                    console.log('fetchMovieUserStates response', response);
+                    dispatch(fetchMovieUserFavoriteSuccess(response.data.favorite));
+                    dispatch(fetchMovieUserRatingSuccess(response.data.rating));
+                }
+            })
+            .catch(error => {
+                throw (error);
+            });
+    }
+}
+
+export function markMovieAsFavorite(id, favorite) {
+    console.log('markMovieAsFavorite id:', id, 'favorite:', favorite);
+    return dispatch => {
+        const token = localStorage.getItem(LOCALSTORAGE_PATH);
+        if (!token) {
+            return;
+        }
+
+        axios.post(`/api/user/favorite`, {
+            token,
+            movieId: id,
+            favorite
+        })
+            .then(response => {
+                if (response.data.success) {
+                    console.log('markMovieAsFavorite response', response);
+                    dispatch(fetchMovieUserFavoriteSuccess(response.data.favorite));
+                }
+            })
+            .catch(error => {
+                throw (error);
+            });
+    }
+}

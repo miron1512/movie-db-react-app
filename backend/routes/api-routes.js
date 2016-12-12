@@ -97,7 +97,7 @@ apiRoutes.use((req, res, next) => {
 });
 
 apiRoutes.get('/me', (req, res) => {
-    var username = req.decoded._doc.username;
+    var username = req.decoded.username;
     return res.send({
         success: true,
         username: username
@@ -108,12 +108,7 @@ apiRoutes.post('/user/favorite', (req, res) => {
     console.log(req.body);
     var favorite = req.body.favorite;
     var movieId = req.body.movieId;
-    var username = req.decoded._doc.username;
-    var isFavorite = favorite != 'false';
-
-
-
-    //console.log(req.decoded);
+    var username = req.decoded.username;
 
     if (!movieId) {
         return res.status(400).send({
@@ -132,13 +127,13 @@ apiRoutes.post('/user/favorite', (req, res) => {
             });
         }
         var indexOfMovieId = user.favorites.indexOf(movieId);
-        console.log(isFavorite, movieId);
+        console.log(favorite, movieId);
 
-        if (indexOfMovieId >= 0 && !isFavorite) {
+        if (indexOfMovieId >= 0 && !favorite) {
             console.log('del ' + movieId + ' by index: ' + indexOfMovieId);
             user.favorites.pull(movieId);
         }
-        if (indexOfMovieId < 0 && isFavorite) {
+        if (indexOfMovieId < 0 && favorite) {
             console.log('add ' + movieId);
             user.favorites.push(movieId);
         }
@@ -147,14 +142,18 @@ apiRoutes.post('/user/favorite', (req, res) => {
             if (err) throw err;
 
             console.log('User add/delete favorite movie successfully');
-            res.json({ success: true });
+            res.json({
+                success: true,
+                movieId: movieId,
+                favorite: favorite
+            });
         });
     })
 });
 
 apiRoutes.get('/movie/:movieId/account_states', (req, res) => {
     var movieId = req.params.movieId;
-    var username = req.decoded._doc.username;
+    var username = req.decoded.username;
 
     User.findOne({ username: username }).exec()
         .then(user => {
@@ -168,6 +167,7 @@ apiRoutes.get('/movie/:movieId/account_states', (req, res) => {
             var indexOfRating = user.ratings.findIndex((val) => val.movieId === movieId);
 
             return res.json({
+                success: true,
                 movieId: movieId,
                 favorite: user.favorites.indexOf(movieId) >= 0,
                 rating: indexOfRating >= 0 ? user.ratings[indexOfRating].rating : null
@@ -178,7 +178,7 @@ apiRoutes.get('/movie/:movieId/account_states', (req, res) => {
 apiRoutes.post('/movie/:movieId/rating', (req, res) => {
     var movieId = req.params.movieId;
     var userRating = Number(req.body.value);
-    var username = req.decoded._doc.username;
+    var username = req.decoded.username;
 
     console.log('POST /movie/' + movieId + '/rating', 'value:', userRating, 'user:', username);
 
@@ -247,7 +247,7 @@ apiRoutes.post('/movie/:movieId/rating', (req, res) => {
 
 apiRoutes.delete('/movie/:movieId/rating', (req, res) => {
     var movieId = req.params.movieId;
-    var username = req.decoded._doc.username;
+    var username = req.decoded.username;
     var userRating = 0;
 
     console.log('DELETE /movie/' + movieId + '/rating', 'user:', username);
