@@ -40,7 +40,7 @@ class DiscoverMovieContainer extends Component {
 
     render() {
         return (
-            <div>
+            <div className="container">
                 <FilterTools onFilterToolsClick={this.handlerClickFilterTools} />
 
                 <MovieList movies={this.props.movies} onGetMoreClick={this.handlerClickGetMore} />
