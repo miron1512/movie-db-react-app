@@ -5,7 +5,7 @@ import {
     IMAGE_SIZES
 } from '../constants/movieConstants';
 
-class MovieList extends Component {
+class DiscoverMovie extends Component {
     constructor(props) {
         super(props);
 
@@ -17,11 +17,7 @@ class MovieList extends Component {
     }
 
     renderList() {
-        // if (this.props.movies.load_pages < 2)
-        //     this.props.fetchMovies(this.props.movies.load_pages + 1);
         console.log(this.props.movies);
-        // if (!this.props.movies.load_pages)
-        //     return ''
         return this.props.movies.all.map((movie) => {
             console.log(movie);
             const img_src = movie.poster_path ? `${BASE_IMAGE_URL}${IMAGE_SIZES.MEDIUM}${movie.poster_path}` : '';
@@ -45,4 +41,4 @@ class MovieList extends Component {
     }
 }
 
-export default MovieList;
+export default DiscoverMovie;

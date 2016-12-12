@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchMovies } from '../actions';
 import FilterTools from '../components/FilterTools';
-import MovieList from '../components/MovieList';
+import DiscoverMovie from '../components/DiscoverMovie';
 
 class DiscoverMovieContainer extends Component {
     constructor(props) {
@@ -43,7 +43,7 @@ class DiscoverMovieContainer extends Component {
             <div className="container">
                 <FilterTools onFilterToolsClick={this.handlerClickFilterTools} />
 
-                <MovieList movies={this.props.movies} onGetMoreClick={this.handlerClickGetMore} />
+                <DiscoverMovie movies={this.props.movies} onGetMoreClick={this.handlerClickGetMore} />
             </div>
         );
     }
