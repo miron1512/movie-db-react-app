@@ -1,12 +1,13 @@
 import axios from 'axios';
 import * as types from '../constants/actionTypes';
-import { SORT_BY } from '../constants/movieConstants';
-
-const API_KEY = '696f3e52c68040e7494e899843a4339a';
-const POPULAR_MOVIES_REQUEST = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc';
-const DISCOVER_BASE_URL = 'https://api.themoviedb.org/3/discover/movie';
-const MOVIE_BASE_URL = 'https://api.themoviedb.org/3/movie';
-const SEARCH_URL = 'https://api.themoviedb.org/3/search/movie?';
+import {
+    SORT_BY,
+    LOCALSTORAGE_PATH,
+    API_KEY,
+    DISCOVER_BASE_URL,
+    MOVIE_BASE_URL,
+    SEARCH_URL
+} from '../constants/movieConstants';
 
 const fetchMoviesSuccess = (response) => {
     return {
@@ -22,8 +23,6 @@ export function fetchMovies(query) {
         + (query.selectYear === 'All' ? '' : `&year=${query.selectYear}`)
         + `&sort_by=${SORT_BY[query.selectSortOption]}.${query.sortAsc ? 'asc' : 'desc'}`
         + `&page=${query.page + 1}`;
-
-
 
     console.log('fetchMovies query_url:', query_url);
     console.log('fetchMovies request:', `${DISCOVER_BASE_URL}?api_key=${API_KEY}${query_url}`);
@@ -59,7 +58,6 @@ export function searchMovie(query) {
             .catch(error => {
                 throw (error);
             });
-
     };
 };
 
