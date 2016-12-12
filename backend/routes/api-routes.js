@@ -151,6 +151,41 @@ apiRoutes.post('/user/favorite', (req, res) => {
     })
 });
 
+apiRoutes.get('/user/favorite', (req, res) => {
+    var username = req.decoded.username;
+    var page = Math.floor(Number(req.query.page)) || 1;
+
+    User.findOne({ username: username }, (err, user) => {
+        if (err) throw err;
+
+        if (!user) {
+            return res.status(400).send({
+                success: false,
+                message: 'User probably already deleted.'
+            });
+        }
+        var total_results = user.favorites.length;
+        var total_pages = Math.ceil(total_results / 20);
+        console.log('total_results', total_results, 'total_pages', total_pages);
+        if (page >= 1 && page <= total_pages) {
+            return res.json({
+                success: true,
+                page: page,
+                results: user.favorites.slice((page - 1) * 20, page * 20),
+                total_pages: total_pages,
+                total_results: total_results
+            });
+        }
+        return res.json({
+            success: true,
+            page: 1,
+            results: user.favorites.slice(0, 20),
+            total_pages: total_pages,
+            total_results: total_results
+        });
+    });
+});
+
 apiRoutes.get('/movie/:movieId/account_states', (req, res) => {
     var movieId = req.params.movieId;
     var username = req.decoded.username;
