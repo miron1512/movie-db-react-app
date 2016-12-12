@@ -5,6 +5,7 @@ import DiscoverMovieContainer from './containers/DiscoverMovieContainer';
 import MoviePageContainer from './containers/MoviePageContainer';
 import SignContainer from './containers/SignContainer';
 import LogoutContainer from './containers/LogoutContainer';
+import FavoriteMoviesContainer from './containers/FavoriteMoviesContainer';
 
 export default (
     <Route path="/" component={App} >
@@ -13,5 +14,6 @@ export default (
         <Route path='login' component={SignContainer} />
         <Route path='signup' component={SignContainer} />
         <Route path='logout' component={LogoutContainer} />
+        <Route path='myfavorites' component={FavoriteMoviesContainer} />
     </Route>
 );

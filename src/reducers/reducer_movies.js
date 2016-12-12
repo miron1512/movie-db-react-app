@@ -1,6 +1,6 @@
 import * as types from '../constants/actionTypes';
 
-const INITIAL_STATE = { all: [], load_pages: 0, search_result: [] };
+const INITIAL_STATE = { all: [], load_pages: 0, search_result: [], favorite_list: {} };
 
 function clearExtraData(arr) {
     return arr.map(({id, title, poster_path, release_date}) => { return { id, title, poster_path, release_date } })
@@ -26,6 +26,11 @@ export default function (state = INITIAL_STATE, action) {
             if (action.payload.data)
                 return {...state, search_result: clearExtraData(action.payload.data.results) };
             return {...state, search_result: [] }
+
+        case types.FETCH_FAVORITE_MOVIES:
+            let {page, results, total_pages, total_results} = action.payload;
+            let list = { page, total_pages, total_results, results: clearExtraData(results) }
+            return {...state, favorite_list: list };
 
         default:
             return state;

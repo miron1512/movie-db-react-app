@@ -202,3 +202,49 @@ export function markMovieAsFavorite(id, favorite) {
             });
     }
 }
+
+const fetchFavoriteMoviesSuccess = (response) => {
+    return {
+        type: types.FETCH_FAVORITE_MOVIES,
+        payload: response
+    };
+};
+
+export function fetchFavoriteMovies(page) {
+    return dispatch => {
+        const token = localStorage.getItem(LOCALSTORAGE_PATH);
+        if (!token) {
+            return;
+        }
+
+        let total_pages, total_results;
+        axios.get(`/api/user/favorite?page=${page}&token=${token}`)
+            .then(response => {
+                console.log('fetchFavoriteMovies response', response);
+                if (!response.data.success) {
+                    console.log('fetchFavoriteMovies response', response);
+                }
+                total_pages = response.data.total_pages;
+                total_results = response.data.total_results;
+                return Promise.resolve(response.data.results.map(id => axios.get(`${MOVIE_BASE_URL}/${id}?api_key=${API_KEY}`)))
+            })
+            .then(promises => {
+                console.log('fetchFavoriteMovies promises', promises);
+                return Promise.resolve(Promise.all(promises))
+            })
+            .then(results => {
+                console.log('fetchFavoriteMovies results', results);
+                console.log('fetchFavoriteMovies newResults', results.map(v => v.data));
+                dispatch(fetchFavoriteMoviesSuccess({
+                    page,
+                    results: results.map(v => v.data),
+                    total_pages,
+                    total_results
+                }));
+
+            })
+            .catch(error => {
+                throw (error);
+            });
+    }
+}
