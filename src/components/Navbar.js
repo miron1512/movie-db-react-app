@@ -17,7 +17,7 @@ const renderUserNav = (user) => {
     if (user) {
         return (
             <Nav pullRight>
-                <MyLink className="btn navbar-btn" to="/myfavourites">{user}</MyLink>
+                <MyLink className="btn navbar-btn" to="/myfavorites">{user}</MyLink>
                 <MyLink className="btn btn-default navbar-btn" to="/logout">Log out</MyLink>
             </Nav>
         );
