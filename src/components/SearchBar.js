@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router'
+import React, { Component } from 'react';
+import { Link } from 'react-router'
+import MovieItem from './MovieItem';
 
 class SearchBar extends Component {
     constructor(props) {
@@ -14,26 +15,26 @@ class SearchBar extends Component {
         this.props.onInputChange(term);
     }
 
-    renderMovieItem(movie) {
-        const releaseYear = movie.release_date
-            ? (<small>({(new Date(movie.release_date)).getFullYear() }) </small>)
-            : '';
-        return (
-            <Link className='list-group-item' key={movie.id} to={`/movie/${movie.id}`}>
-                <div className="media">
-                    <div className="media-left">
-                        <img className="media-object" src={movie.poster_path} />
+    // renderMovieItem(movie) {
+    //     const releaseYear = movie.release_date
+    //         ? (<small>({(new Date(movie.release_date)).getFullYear()}) </small>)
+    //         : '';
+    //     return (
+    //         <Link className='list-group-item' key={movie.id} to={`/movie/${movie.id}`}>
+    //             <div className="media">
+    //                 <div className="media-left">
+    //                     <img className="media-object" src={movie.poster_path} />
 
-                    </div>
-                    <div className="media-body">
-                        <h4 className="media-heading">
-                            {movie.title} {' '} {releaseYear}
-                        </h4>
-                    </div>
-                </div>
-            </Link>
-        );
-    }
+    //                 </div>
+    //                 <div className="media-body">
+    //                     <h4 className="media-heading">
+    //                         {movie.title} {' '} {releaseYear}
+    //                     </h4>
+    //                 </div>
+    //             </div>
+    //         </Link>
+    //     );
+    // }
 
     renderSearchResults() {
 
@@ -41,7 +42,7 @@ class SearchBar extends Component {
             <div id="search-results" className="list-group">
                 {
                     this.props.searchResults.map((movie) => {
-                        return this.renderMovieItem(movie)
+                        return <MovieItem key={movie.id} movie={movie} />
                     })
                 }
             </div>
@@ -56,7 +57,7 @@ class SearchBar extends Component {
                     className="form-control"
                     placeholder="Search"
                     value={this.state.term}
-                    onChange={event => this.onInputChange(event.target.value) }
+                    onChange={event => this.onInputChange(event.target.value)}
                     />
                 <span className="form-control-feedback glyphicon glyphicon-search" />
                 {this.props.searchResults.length > 0 ? this.renderSearchResults() : ''}
