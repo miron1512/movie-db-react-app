@@ -1,40 +1,62 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { searchMovie } from '../actions';
 import SearchBar from '../components/SearchBar';
+import {
+    BASE_IMAGE_URL,
+    IMAGE_SIZES
+} from '../constants/movieConstants';
 
 class SearchBarContainer extends Component {
     constructor(props) {
         super(props);
 
+
+        this.state = { searchRequest: '' };
+        this.list = [];
+
+        browserHistory.listen(location => {
+            this.pathChanged(location);
+        });
+
         this.handleOnInputChange = this.handleOnInputChange.bind(this);
+
+    }
+
+    pathChanged(location) {
+        this.handleOnInputChange('');
     }
 
     handleOnInputChange(query) {
         console.log('SearchBarContainer handleOnInputChange', query);
-        this.props.searchMovie(query);
+        this.setState({ searchRequest: query }, () => {
+            this.props.searchMovie(query);
+        });
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
+        console.log('SearchBarContainer componentWillReceiveProps', nextProps);
+        let {results} = nextProps;
+        if (results) {
+            this.list = this.modifyData(results);
+        }
     }
 
-    modifyData() {
-        const BASE_URL = 'https://image.tmdb.org/t/p/';
-        const POSTER_SIZES = ["w92", "w154", "w185", "w342", "w500", "w780", "original"];
-
-        return this.props.results.map((movie) => {
-            movie.poster_path = movie.poster_path ? `${BASE_URL}${POSTER_SIZES[0]}${movie.poster_path}` : ''
-            return movie;
-        })
+    modifyData(list) {
+        return list.map((movie) => {
+            let poster_path = movie.poster_path ? `${BASE_IMAGE_URL}${IMAGE_SIZES.XSMALL}${movie.poster_path}` : '';
+            return Object.assign({}, movie, { poster_path });
+        });
     }
 
     render() {
         return (
             <div className="container">
                 <SearchBar
+                    value={this.state.searchRequest}
                     onInputChange={value => this.handleOnInputChange(value)}
-                    searchResults={this.modifyData()}
+                    searchResults={this.list}
                     />
             </div>
         );
