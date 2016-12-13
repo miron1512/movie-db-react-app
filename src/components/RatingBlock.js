@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Rating from 'react-rating';
 
-class RitingBlock extends Component {
+class RatingBlock extends Component {
     render() {
         return (
             <div>
-                <Rating />
+                <Rating readonly />
             </div>
         );
     }
 }
 
-export default RitingBlock;
+export default RatingBlock;
